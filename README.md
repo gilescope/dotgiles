@@ -14,3 +14,7 @@ Not everything is sorted _yet_. Here's the todo list with tips:
 
  * Sound - seems possible though only at full volume: https://github.com/davidjo/snd_hda_macbookpro
  * Touchbar (Function keys) - https://github.com/roadrunner2/macbook12-spi-driver.git
+
+## Other nix dotfiles examples
+
+If you want to see some other examples, I've made a collection of them here: https://github.com/gilescope/nix-all
