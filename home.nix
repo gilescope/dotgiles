@@ -35,6 +35,8 @@
   #(citrix_workspace.overrideAttrs (oldAttrs:{ version = "19.12.0"; } ) )
 citrix_workspace
 #pijul
+
+patcheld # rustc compile uses this.
 lldb
 gnumake
 gitAndTools.tig
@@ -77,18 +79,108 @@ hyperfine
   programs.direnv.enable = true;
 #  services.lorri.enable = true;
 
-  programs.vscode= {
+  programs.vscode = {
+    enable = true;
+
+    # Overrides manually-installed extensions, but there are almost none in
+    # nixpkgs as of 2020-01-01
     extensions = with pkgs.vscode-extensions; [
+      # Nix language support
       bbenoist.Nix
-      llvm-org.lldb-vscode
-      gilescope.arrowkeydebugging
-    ];
-    userSettings = ''
+
+      # Wakatime editor plugin
+      # WakaTime.vscode-wakatime
+
+      # Vim bindings
+      vscodevim.vim
+    ]
+
+    # To fetch the SHA256, use `nix-prefetch-url` with this template:
+    #
+    #   https://<publisher>.gallery.vsassets.io/_apis/public/gallery/publisher/<publisher>/extension/<name>/<version>/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage
+
+    ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+
+      # The Nord color scheme
       {
-        "example.setting" = "none";
+        name = "nord-visual-studio-code";
+        publisher = "arcticicestudio";
+        version = "0.13.0";
+        sha256 = "15c1gcw00lssq1qiqmkxapw2acgnlixy055wh5pgq68brm6fwdq6";
       }
-    '';
+
+  {
+    name = "vscode-lldb";
+    publisher = "vadimcn";
+    version = "1.4.5";
+    sha256 = "1lvnpf6lpn1w1m2gcv6vc3yj1xpz6zb49s3zlqhc4pjm7xrfr34n";
+  }
+
+    ];
+
+    # vscode settings.json is made read-only and controlled via this section; editing settings
+    # in the ui will reveal what to copy over here.
+    userSettings = {
+      # editor settings
+      "editor.formatOnSave" = true;
+      "editor.minimap.enabled" = false;
+      "editor.fontSize" = 14;
+      "editor.lineHeight" = 24;
+      "editor.fontFamily" = "Audiowide, Hasklig, Overpass Mono, monospace";
+      "editor.fontLigatures" = true;
+      "editor.tabSize" = 4;
+      "editor.rulers" = [100];
+      "editor.renderIndentGuides" = false;
+      "vim.neovimPath" = "/home/giles/.nix-profile/bin/nvim";
+      "vim.enableNeovim" = false;
+      # languages
+
+      # theme
+      "workbench.colorTheme" = "Nord";
+      "editor.tokenColorCustomizations" = {
+        "[Nord]" = {
+          "textMateRules" = [
+            {
+              "scope" = [ "entity.name.type.purescript" ];
+              "settings" = {
+                "foreground" = "#88C0D0";
+              };
+            }
+          ];
+        };
+      };
+
+      # misc
+      "files.trimTrailingWhitespace" = true;
+      "breadcrumbs.enabled" = true;
+      "git.autofetch" = true;
+      "window.zoomLevel" = 2;
+      "css.validate" = false;
+      "scss.validate" = false;
+      "less.validate" = false;
+      "files.associations" = {
+        "*.css" = "scss";
+        "*.js" = "javascript";
+      };
+    };
   };
+
+  home.file = {
+    ".inputrc".text =
+      ''
+        set editing-mode vi
+        set keymap vi-command
+      '';
+    "/home/giles/.config/Code/User/keybindings.json".text = ''
+    [{
+        "command": "vscode-neovim.compositeEscape1",
+        "key": "j",
+        "when": "neovim.mode == insert",
+        "args": "j"
+    }]
+      '';
+    };
+
 
   home.sessionVariables = {
   };
@@ -110,6 +202,7 @@ hyperfine
     };
     extraConfig = ''
       set mouse=a
+      set number relativenumber
     '';
   };
 
