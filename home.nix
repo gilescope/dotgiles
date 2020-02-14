@@ -19,6 +19,7 @@
       export EDITOR=vim
       export RUSTC_WRAPPER=sccache
       export PATH=$PATH:/home/giles/.cargo/bin
+      export GITHUB_USER=gilescope
       '';
   };
 
@@ -35,11 +36,17 @@
   #(citrix_workspace.overrideAttrs (oldAttrs:{ version = "19.12.0"; } ) )
 citrix_workspace
 #pijul
-
-patcheld # rustc compile uses this.
+wasm-pack
+openssl
+fzf
+emscripten
+patchelf # rustc compile uses this.
 lldb
+rr
+wireshark
 gnumake
 gitAndTools.tig
+gitAndTools.hub  # hub sync will update your fork!
 cmake
 pkg-config
 powerline-fonts
@@ -53,6 +60,7 @@ bat
 carnix
 _1password
 spotify
+neovim
 nodejs
 gimp
 tokei
@@ -65,6 +73,7 @@ hyperfine
         graphviz
         xsv
         fd
+        yank # pbcopy for linux
         python3
         riot-desktop
         direnv
@@ -179,6 +188,21 @@ hyperfine
         "args": "j"
     }]
       '';
+      "/home/giles/.config/fish/functions/fish_prompt.fish".text = ''
+function fish_prompt
+    set -l code $status
+    test $SSH_TTY
+    and printf (set_color red)$USER(set_color brwhite)'@'(set_color yellow)(prompt_hostname)' '
+    test "$USER" = 'root'; and echo (set_color red)"#"
+
+    if not set -q __git_cb
+        set __git_cb (set_color brown)(git branch ^/dev/null | grep \* | sed 's/* //')(set_color normal)""
+    end
+
+    test $code -ne 0; and echo (set_color red)"DON'T PANIC."
+    echo -n $__git_cb (set_color green)(prompt_pwd)'> '
+end
+      '';
     };
 
 
@@ -187,29 +211,63 @@ hyperfine
   programs.vim = {
     enable = true;
     plugins = with pkgs.vimPlugins; [
+      vim-sensible
       nerdtree
       auto-git-diff
       deoplete-rust
-  #    rust-vim
+      #    rust-vim
       syntastic
+      vim-obsession
       vim-airline
       vim-addon-nix
       vim-better-whitespace
       vim-gitgutter
       vim-surround
+      vim-easymotion
     ];
     settings = {
     };
     extraConfig = ''
+      set tabstop=4
+      set shiftwidth=4
+      set softtabstop=4
+      set expandtab
+
+      let mapleader=","
+      let g:EasyMotion_smartcase = 1
+
+      set encoding=utf-8
       set mouse=a
       set number relativenumber
-    '';
+
+" <Leader>f{char} to move to {char}
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader>w <Plug>(easymotion-overwin-w)
+
+      '';
   };
 
   programs.fish = {
-    enable = false;
+    enable = true;
     shellAbbrs = {
          # Git abbreviations
+         "dir" = "ls -l";
+         "copy" = "cp";
+         "tig" = "tig status";
+         "cat" = "bat --paging=never -p";
+         "f" = "cd ~/f";
+         "p" = "cd ~/p";
          "glg" = "git log --color --graph --pretty --oneline";
          "glgb" = "git log --all --graph --decorate --oneline --simplify-by-decoration";
     };
@@ -225,6 +283,7 @@ hyperfine
       merge.conflictstyle = "diff3";
       push.default = "current";
       rebase.autostash = true;
+      hub.protocol = "git";
     };
   };
 
