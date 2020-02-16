@@ -36,42 +36,45 @@
   #(citrix_workspace.overrideAttrs (oldAttrs:{ version = "19.12.0"; } ) )
 citrix_workspace
 #pijul
+#parted
 wasm-pack
+xorg.xmodmap
 openssl
 fzf
-emscripten
+#lcov # Gives you genhtml command for coverage generation. See grcov
+#emscripten
 patchelf # rustc compile uses this.
 lldb
 rr
-wireshark
+#wireshark
 gnumake
 gitAndTools.tig
 gitAndTools.hub  # hub sync will update your fork!
 cmake
 pkg-config
-powerline-fonts
-freeciv_gtk
-niv
+#powerline-fonts
+#freeciv_gtk
+#niv
 #xorg.xmodmap
-exa
+#exa
 clang
 llvmPackages.bintools
 bat
 carnix
-_1password
-spotify
-neovim
+#_1password
+#spotify
+#neovim
 nodejs
-gimp
-tokei
+#gimp
+#tokei
 #pijul
 sccache
 nodePackages.node2nix
-hyperfine
+#hyperfine
 	ripgrep
-	hexyl
+#	hexyl
         graphviz
-        xsv
+#        xsv
         fd
         yank # pbcopy for linux
         python3
@@ -81,7 +84,7 @@ hyperfine
 	tmux
         jq
         jetbrains.clion
-        jetbrains.datagrip
+#        jetbrains.datagrip
         htop
         (fontforge.override { withGTK = true; })
       ];
@@ -99,9 +102,9 @@ hyperfine
 
       # Wakatime editor plugin
       # WakaTime.vscode-wakatime
-
+      llvm-org.lldb-vscode
       # Vim bindings
-      vscodevim.vim
+      #vscodevim.vim
     ]
 
     # To fetch the SHA256, use `nix-prefetch-url` with this template:
@@ -111,19 +114,31 @@ hyperfine
     ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
 
       # The Nord color scheme
-      {
-        name = "nord-visual-studio-code";
-        publisher = "arcticicestudio";
-        version = "0.13.0";
-        sha256 = "15c1gcw00lssq1qiqmkxapw2acgnlixy055wh5pgq68brm6fwdq6";
-      }
-
+#      {
+#        name = "nord-visual-studio-code";
+#        publisher = "arcticicestudio";
+#        version = "0.13.0";
+#        sha256 = "15c1gcw00lssq1qiqmkxapw2acgnlixy055wh5pgq68brm6fwdq6";
+#      }
   {
-    name = "vscode-lldb";
-    publisher = "vadimcn";
-    version = "1.4.5";
-    sha256 = "1lvnpf6lpn1w1m2gcv6vc3yj1xpz6zb49s3zlqhc4pjm7xrfr34n";
+    name = "subtle-brackets";
+    publisher = "rafamel";
+    version = "3.0.0";
+    sha256 = "1wqwgjmbr8xr5k9jhpqyaz7j793h9vxbpf2rbwwg9fxj17wx9833";
   }
+
+#  {
+#    name = "vscode-lldb";
+#    publisher = "vadimcn";
+#    version = "1.4.5";
+#    sha256 = "1lvnpf6lpn1w1m2gcv6vc3yj1xpz6zb49s3zlqhc4pjm7xrfr34n";
+#  }
+      {
+        name = "cyberdyne20xx";
+        publisher = "clerian";
+        version = "0.0.1";
+        sha256 = "0kix0vbqhaqhbmjs3y28qw71xmn5lljf0vpy5ih5h25g2iay82w4";
+      }
 
     ];
 
@@ -140,24 +155,13 @@ hyperfine
       "editor.tabSize" = 4;
       "editor.rulers" = [100];
       "editor.renderIndentGuides" = false;
-      "vim.neovimPath" = "/home/giles/.nix-profile/bin/nvim";
+     "vim.neovimPath" = "/home/giles/.nix-profile/bin/nvim";
       "vim.enableNeovim" = false;
       # languages
-
+      "editor.lineNumbers" = "off";
       # theme
       "workbench.colorTheme" = "Nord";
-      "editor.tokenColorCustomizations" = {
-        "[Nord]" = {
-          "textMateRules" = [
-            {
-              "scope" = [ "entity.name.type.purescript" ];
-              "settings" = {
-                "foreground" = "#88C0D0";
-              };
-            }
-          ];
-        };
-      };
+      "editor.matchBrackets" = "never";
 
       # misc
       "files.trimTrailingWhitespace" = true;
@@ -221,7 +225,7 @@ end
       vim-airline
       vim-addon-nix
       vim-better-whitespace
-      vim-gitgutter
+      #vim-gitgutter
       vim-surround
       vim-easymotion
     ];
@@ -233,11 +237,13 @@ end
       set softtabstop=4
       set expandtab
 
+      set paste
+
       let mapleader=","
       let g:EasyMotion_smartcase = 1
 
       set encoding=utf-8
-      set mouse=a
+      set mouse-=a
       set number relativenumber
 
 " <Leader>f{char} to move to {char}
