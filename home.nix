@@ -34,20 +34,30 @@
   home.stateVersion = "19.09";
   home.packages = with pkgs; [
   #(citrix_workspace.overrideAttrs (oldAttrs:{ version = "19.12.0"; } ) )
+nix-du
+awscli
 citrix_workspace
 #pijul
 #parted
 wasm-pack
 xorg.xmodmap
 openssl
-fzf
+dropbox
+#fzf
 #lcov # Gives you genhtml command for coverage generation. See grcov
 #emscripten
 patchelf # rustc compile uses this.
 lldb
-rr
+#rr
 #wireshark
 gnumake
+
+# rustc
+ninja
+cmake
+valgrind
+swig
+
 gitAndTools.tig
 gitAndTools.hub  # hub sync will update your fork!
 cmake
@@ -59,17 +69,20 @@ pkg-config
 #exa
 clang
 llvmPackages.bintools
+nixops
 bat
-carnix
+#carnix
 #_1password
 #spotify
 #neovim
 nodejs
+#nodePackages.vsce
+nodePackages.yo
 #gimp
 #tokei
 #pijul
 sccache
-nodePackages.node2nix
+#nodePackages.node2nix
 #hyperfine
 	ripgrep
 #	hexyl
@@ -78,21 +91,21 @@ nodePackages.node2nix
         fd
         yank # pbcopy for linux
         python3
-        riot-desktop
+#        riot-desktop
         direnv
 	thunderbird
 	tmux
         jq
-        jetbrains.clion
+#        jetbrains.clion
 #        jetbrains.datagrip
-        htop
+#        htop
         (fontforge.override { withGTK = true; })
       ];
   programs.direnv.enable = true;
 #  services.lorri.enable = true;
 
   programs.vscode = {
-    enable = true;
+    enable = true ;
 
     # Overrides manually-installed extensions, but there are almost none in
     # nixpkgs as of 2020-01-01
@@ -113,18 +126,24 @@ nodePackages.node2nix
 
     ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
 
-      # The Nord color scheme
-#      {
-#        name = "nord-visual-studio-code";
-#        publisher = "arcticicestudio";
-#        version = "0.13.0";
-#        sha256 = "15c1gcw00lssq1qiqmkxapw2acgnlixy055wh5pgq68brm6fwdq6";
-#      }
   {
     name = "subtle-brackets";
     publisher = "rafamel";
     version = "3.0.0";
     sha256 = "1wqwgjmbr8xr5k9jhpqyaz7j793h9vxbpf2rbwwg9fxj17wx9833";
+  }
+  {
+    name = "LiveServer";
+    publisher = "ritwickdey";
+    version = "5.6.1";
+    sha256 = "077arf3hsn1yb8xdhlrax5gf93ljww78irv4gm8ffmsqvcr1kws0";
+  }
+
+  {
+      name = "org-mode";
+      publisher = "vscode-org-mode";
+      version = "1.0.0";
+      sha256 = "1dp6mz1rb8awrrpig1j8y6nyln0186gkmrflfr8hahaqr668il53";
   }
 
 #  {
@@ -144,38 +163,38 @@ nodePackages.node2nix
 
     # vscode settings.json is made read-only and controlled via this section; editing settings
     # in the ui will reveal what to copy over here.
-    userSettings = {
-      # editor settings
-      "editor.formatOnSave" = true;
-      "editor.minimap.enabled" = false;
-      "editor.fontSize" = 14;
-      "editor.lineHeight" = 24;
-      "editor.fontFamily" = "Audiowide, Hasklig, Overpass Mono, monospace";
-      "editor.fontLigatures" = true;
-      "editor.tabSize" = 4;
-      "editor.rulers" = [100];
-      "editor.renderIndentGuides" = false;
-     "vim.neovimPath" = "/home/giles/.nix-profile/bin/nvim";
-      "vim.enableNeovim" = false;
-      # languages
-      "editor.lineNumbers" = "off";
-      # theme
-      "workbench.colorTheme" = "Nord";
-      "editor.matchBrackets" = "never";
+#    userSettings = {
+#      # editor settings
+#      "editor.formatOnSave" = true;
+#      "editor.minimap.enabled" = false;
+#      "editor.fontSize" = 14;
+#      "editor.lineHeight" = 24;
+#      "editor.fontFamily" = "Audiowide, Hasklig, Overpass Mono, monospace";
+#      "editor.fontLigatures" = true;
+#      "editor.tabSize" = 4;
+#      "editor.rulers" = [100];
+#      "editor.renderIndentGuides" = false;
+#     "vim.neovimPath" = "/home/giles/.nix-profile/bin/nvim";
+#      "vim.enableNeovim" = false;
+#      # languages
+#      "editor.lineNumbers" = "off";
+#      # theme
+#      "workbench.colorTheme" = "Cyberdyne 20XX";
+#      "editor.matchBrackets" = "never";
 
       # misc
-      "files.trimTrailingWhitespace" = true;
-      "breadcrumbs.enabled" = true;
-      "git.autofetch" = true;
-      "window.zoomLevel" = 2;
-      "css.validate" = false;
-      "scss.validate" = false;
-      "less.validate" = false;
-      "files.associations" = {
-        "*.css" = "scss";
-        "*.js" = "javascript";
-      };
-    };
+#      "files.trimTrailingWhitespace" = true;
+#      "breadcrumbs.enabled" = true;
+#      "git.autofetch" = true;
+#      "window.zoomLevel" = 2;
+#      "css.validate" = false;
+#      "scss.validate" = false;
+#      "less.validate" = false;
+#      "files.associations" = {
+#        "*.css" = "scss";
+#        "*.js" = "javascript";
+#      };
+#    };
   };
 
   home.file = {
@@ -245,7 +264,6 @@ end
       set encoding=utf-8
       set mouse-=a
       set number relativenumber
-
 " <Leader>f{char} to move to {char}
 map  <Leader>f <Plug>(easymotion-bd-f)
 nmap <Leader>f <Plug>(easymotion-overwin-f)
