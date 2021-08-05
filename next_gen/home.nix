@@ -106,14 +106,12 @@ rustup
 #carnix
 #_1password
 #spotify
-#neovim
 nodejs
 #nodePackages.vsce
 #nodePackages.yo
 #gimp
 tokei
 discord
-steam
 #pijul
 #coreutils-prefixed # gpaste
 sccache
@@ -150,9 +148,10 @@ lorri
       # Nix language support
       bbenoist.Nix
 
+	  vadimcn.vscode-lldb
       # Wakatime editor plugin
       # WakaTime.vscode-wakatime
-      llvm-org.lldb-vscode
+      #llvm-org.lldb-vscode
       # Vim bindings
       #vscodevim.vim
     ]
@@ -169,19 +168,19 @@ lorri
     version = "3.0.0";
     sha256 = "1wqwgjmbr8xr5k9jhpqyaz7j793h9vxbpf2rbwwg9fxj17wx9833";
   }
-  {
-    name = "LiveServer";
-    publisher = "ritwickdey";
-    version = "5.6.1";
-    sha256 = "077arf3hsn1yb8xdhlrax5gf93ljww78irv4gm8ffmsqvcr1kws0";
-  }
+#  {
+#    name = "LiveServer";
+#    publisher = "ritwickdey";
+#    version = "5.6.1";
+#    sha256 = "077arf3hsn1yb8xdhlrax5gf93ljww78irv4gm8ffmsqvcr1kws0";
+#  }
 
-  {
-      name = "org-mode";
-      publisher = "vscode-org-mode";
-      version = "1.0.0";
-      sha256 = "1dp6mz1rb8awrrpig1j8y6nyln0186gkmrflfr8hahaqr668il53";
-  }
+#  {
+#      name = "org-mode";
+#      publisher = "vscode-org-mode";
+#      version = "1.0.0";
+#      sha256 = "1dp6mz1rb8awrrpig1j8y6nyln0186gkmrflfr8hahaqr668il53";
+#  }
 
 #  {
 #    name = "vscode-lldb";
@@ -290,6 +289,10 @@ end
     enable = true;
     plugins = with pkgs.vimPlugins; [
       vim-sensible
+  vim-toml
+  vim-devicons
+	  awesome-vim-colorschemes
+	  coc-nvim
       nerdtree
       auto-git-diff
       deoplete-rust
@@ -308,7 +311,7 @@ end
       set shiftwidth=4
       set softtabstop=4
       set expandtab
-
+	  colorscheme alduin
       set paste
 
       let mapleader=","

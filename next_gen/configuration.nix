@@ -88,7 +88,19 @@
 
   # Enable sound.
   sound.enable = true;
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio = {
+    enable = true;
+    support32Bit = config.hardware.pulseaudio.enable;
+    package = pkgs.pulseaudioFull;
+  };
+  hardware.opengl = { 
+    enable = true;
+    driSupport32Bit = true;
+  };
+  hardware.steam-hardware.enable = true;
+
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -115,15 +127,20 @@
      direnv
      ntfs3g
      psmisc	
-    
-
      xorg.libxcb # steam dependency
+     steam
+     steam-run
+     playonlinux
+     procps
+     usbutils
+
      glibcLocales # probably not needed - if gnome-terminal still works then ditch
  
      gnupg22
      yubikey-personalization
   ];
 
+  nixpkgs.config.allowNonFree = true;
   nixpkgs.overlays = [
     (self: super: {
       neovim = super.neovim.override {
@@ -163,6 +180,10 @@
   services.udev.packages = with pkgs; [
     yubikey-personalization
   ];
+
+
+services.flatpak.enable = true;
+xdg.portal.enable = true;
 
   nix.useSandbox = true;
   nix.buildCores = 0;
