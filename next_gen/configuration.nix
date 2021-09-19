@@ -76,9 +76,10 @@
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
+  services.xserver.displayManager.gdm.wayland = false;
   services.xserver.desktopManager.gnome.enable = true;
   
-
+  services.xrdp.enable = true;
   # Configure keymap in X11
   # services.xserver.layout = "uk";
   # services.xserver.xkbOptions = "eurosign:e";
@@ -105,12 +106,16 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  virtualisation.docker.enable = true;
+
+  users.groups.plugdev = {};
+
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.gilescope = {
      isNormalUser = true;
-     extraGroups = [ "wheel" "audio" "video" "docker" ]; # Enable ‘sudo’ for the user.
+     extraGroups = [ "wheel" "audio" "video" "docker" "input" "uinput" "plugdev" ]; # Enable ‘sudo’ for the user.
   };
 
   # List packages installed in system profile. To search, run:
@@ -183,6 +188,8 @@
 
 
 services.flatpak.enable = true;
+
+
 xdg.portal.enable = true;
 
   nix.useSandbox = true;

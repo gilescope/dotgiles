@@ -55,6 +55,12 @@ in
   home.stateVersion = "19.09";
   home.packages = with pkgs; [
   #(citrix_workspace.overrideAttrs (oldAttrs:{ version = "19.12.0"; } ) )
+#steam's not ready for vulkan
+#vulkan-tools
+#lutris
+#libGL
+# temp broken haskellPackages.kmonad
+xclip
 nix-du
 #awscli
 #citrix_workspace
@@ -64,6 +70,19 @@ yubikey-manager
 wasm-pack
 #xorg.xmodmap
 openssl
+ledger-udev-rules
+ledger-live-desktop
+honggfuzz
+act
+jetbrains.clion
+#signal-desktop
+#jupyter
+audacity
+adoptopenjdk-bin
+
+#handbrake
+#inkscape
+#gimp
 #dropbox
 #fzf
 #lcov # Gives you genhtml command for coverage generation. See grcov
@@ -73,11 +92,13 @@ lldb
 #rr
 #wireshark
 gnumake
-podman
+#podman
+docker
 rust_analyzer_wrapped
 rust_analyzer_cargo_check
 #bintools-unwrapped # for 'ar' that some substrate tests need.
 diener
+radicle-upstream
 
 # rustc
 ninja
@@ -85,10 +106,12 @@ cmake
 valgrind
 swig
 
+yarn
 mold
 element-desktop
 spotify
-
+ipfs
+ipfs-cluster
 gitAndTools.tig
 gitAndTools.hub  # hub sync will update your fork!
 cmake
@@ -122,12 +145,13 @@ _1password-gui
 #	hexyl
         graphviz
 #        xsv
-        fd
+ #       fd
         yank # pbcopy for linux
         python3
 #        riot-desktop
         direnv
-	thunderbird 
+#	thunderbird 
+bcompare
 lorri
 	tmux
         jq
@@ -146,7 +170,7 @@ lorri
     # nixpkgs as of 2020-01-01
     extensions = with pkgs.vscode-extensions; [
       # Nix language support
-      bbenoist.Nix
+      #bbenoist.Nix
 
 	  vadimcn.vscode-lldb
       # Wakatime editor plugin
@@ -367,6 +391,7 @@ nmap <Leader>w <Plug>(easymotion-overwin-w)
       commit.gpgsign = true;
       pull.rebase = false;
       core.pager = "cat";
+	  core.excludesfile = "~/.gitignore";
       init.defaultBranch = "main";
       user.signingKey = "8748685515D13EE6D902A1A4631F6352D4A949EF";
       #gpg.program = "/run/current-system/sw/bin/gpg";
