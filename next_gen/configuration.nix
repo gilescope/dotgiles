@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, options, ... }:
 
 {
   imports =
@@ -39,7 +39,7 @@
     preLVM = true;
     };
   };
-  boot.tmpOnTmpfs = true;
+  boot.tmpOnTmpfs = false; # 32gb temp it seems is not enough.
 
   # networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -70,13 +70,19 @@
     keyMap = "us";
   };
 
+  services.cron = {
+    enable = true;
+    systemCronJobs = [
+      "*/5 * * * * /home/gilescope/duckdns/duck.sh"
+    ];
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = false;
   services.xserver.desktopManager.gnome.enable = true;
   
   services.xrdp.enable = true;
@@ -99,7 +105,7 @@
     driSupport32Bit = true;
   };
   hardware.steam-hardware.enable = true;
-
+  hardware.ledger.enable = true;
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
@@ -182,6 +188,38 @@
 
   # List services that you want to enable:
 
+  services.udev.extraRules = ''
+   # Caterina (Pro Micro)
+## Spark Fun Electronics
+### Pro Micro 3V3/8MHz
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1b4f", ATTRS{idProduct}=="9203", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+### Pro Micro 5V/16MHz
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1b4f", ATTRS{idProduct}=="9205", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+### LilyPad 3V3/8MHz (and some Pro Micro clones)
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1b4f", ATTRS{idProduct}=="9207", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+## Pololu Electronics
+### A-Star 32U4
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1ffb", ATTRS{idProduct}=="0101", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+## Arduino SA
+### Leonardo
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0036", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+### Micro
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="0037", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+## Adafruit Industries LLC
+### Feather 32U4
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="239a", ATTRS{idProduct}=="000c", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+### ItsyBitsy 32U4 3V3/8MHz
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="239a", ATTRS{idProduct}=="000d", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+### ItsyBitsy 32U4 5V/16MHz
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="239a", ATTRS{idProduct}=="000e", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+## dog hunter AG
+### Leonardo
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2a03", ATTRS{idProduct}=="0036", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+### Micro
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="2a03", ATTRS{idProduct}=="0037", TAG+="uaccess", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+'';
+
   services.udev.packages = with pkgs; [
     yubikey-personalization
   ];
@@ -198,7 +236,16 @@ xdg.portal.enable = true;
   services.pcscd.enable = true;
 
   # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = false;
+    banner = "eloh";
+    forwardX11 = true;
+#    kexAlgorithms = ["diffie-hellman-group14-sha1";"diffie-hellman-group-exchange-sha1";"diffie-hellman-group1-sha1"];
+  };
+ 
+services.openssh.hostKeys = options.services.openssh.hostKeys.default;
+ #systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
+
   services.xserver.videoDrivers = ["nvidia"];
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
