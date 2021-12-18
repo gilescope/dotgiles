@@ -58,17 +58,20 @@ in
 #steam's not ready for vulkan
 #vulkan-tools
 #lutris
-#libGL
+libGL
 # temp broken haskellPackages.kmonad
 xclip
 nix-du
 #awscli
 #citrix_workspace
 #pijul
+brave
 yubikey-manager
 #parted
 wasm-pack
 #xorg.xmodmap
+ruby
+screen
 openssl
 ledger-udev-rules
 ledger-live-desktop
@@ -99,13 +102,13 @@ rust_analyzer_cargo_check
 #bintools-unwrapped # for 'ar' that some substrate tests need.
 diener
 radicle-upstream
-
+lsof
 # rustc
 ninja
 cmake
 valgrind
 swig
-
+#dirmsgr
 yarn
 mold
 element-desktop
@@ -123,7 +126,7 @@ pkg-config
 #exa
 clang
 #llvmPackages.bintools
-nixops
+#nixops
 bat
 rustup
 #carnix
@@ -151,7 +154,7 @@ _1password-gui
 #        riot-desktop
         direnv
 #	thunderbird 
-bcompare
+#bcompare
 lorri
 	tmux
         jq
@@ -161,7 +164,9 @@ lorri
         (fontforge.override { withGTK = true; })
       ];
   programs.direnv.enable = true;
-  services.lorri.enable = true;
+  programs.direnv.nix-direnv.enable = true;
+  programs.direnv.nix-direnv.enableFlakes = true;
+  #services.lorri.enable = true;
 
   programs.vscode = {
     enable = true ;
@@ -171,7 +176,7 @@ lorri
     extensions = with pkgs.vscode-extensions; [
       # Nix language support
       #bbenoist.Nix
-
+	  ms-vsliveshare.vsliveshare
 	  vadimcn.vscode-lldb
       # Wakatime editor plugin
       # WakaTime.vscode-wakatime
@@ -296,6 +301,9 @@ end
 		name = "Numix";
 		package = pkgs.numix-gtk-theme;
 	};
+	gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
 };
 
 #  programs.gnome-terminal = {
@@ -381,7 +389,11 @@ nmap <Leader>w <Plug>(easymotion-overwin-w)
     enable = true;
     userName = "Giles Cope";
     userEmail = "gilescope@gmail.com";
-
+	aliases = {
+      st = "status";
+	  co = "checkout";
+	  br = "branch";
+    };
     extraConfig = {
       core.editor = "vi";
       merge.conflictstyle = "diff3";
